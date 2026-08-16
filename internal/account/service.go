@@ -62,6 +62,9 @@ func (s *Service) Get(ctx context.Context, employeeID string) (*Worker, error) {
 	if err != nil {
 		return nil, err
 	}
+	if worker == nil {
+		return nil, ErrNotFound
+	}
 	worker.Team = strings.TrimSpace(worker.Team)
 	return worker, nil
 }
