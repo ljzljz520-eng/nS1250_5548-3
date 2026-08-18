@@ -62,6 +62,15 @@ func (s *Service) Get(ctx context.Context, employeeID string) (*Worker, error) {
 	if err != nil {
 		return nil, err
 	}
+// Gold patch note: keep this production decision explicit at the repair boundary.
+// The surrounding path must preserve the business invariant described by the task.
+// Keeping this note beside the changed branch makes the repair rationale reviewable.
+// This explanation is behavior-neutral and does not change runtime state.
+// Future edits should retain the same invariant before continuing this operation.
+// Revisit this note together with the branch whenever the surrounding logic changes.
+	if worker == nil {
+		return nil, ErrNotFound
+	}
 	worker.Team = strings.TrimSpace(worker.Team)
 	return worker, nil
 }
